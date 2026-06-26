@@ -28,6 +28,7 @@ import {
 
 import heroNeedle from "@/assets/hero-needle.jpg";
 import artistPortrait from "@/assets/IMG_4406.avif";
+import artistAbout from "@/assets/0b2b8f_d91a39145cfb4403844281fe5aabe327~mv2.avif";
 import workFloral from "@/assets/work-floral.png";
 import workKnight from "@/assets/work-knight.png";
 import gallery3 from "@/assets/gallery-3.jpg";
@@ -544,14 +545,12 @@ function LandingPage() {
               </div>
             </Reveal>
             <Reveal className="lg:col-span-6 order-1 lg:order-2" delay={0.1}>
-              <figure className="w-full aspect-[3/4] overflow-hidden rounded-[2px] ring-1 ring-ink/5 bg-canvas">
+              <figure className="w-full overflow-hidden rounded-[2px] ring-1 ring-ink/5 bg-canvas">
                 <img
-                  src={artistPortrait}
-                  alt="Portrait of Fifi, handpoke tattoo artist"
-                  width={1024}
-                  height={1344}
+                  src={artistAbout}
+                  alt="Fifi, handpoke tattoo artist — full portrait"
                   loading="lazy"
-                  className="w-full h-full object-cover"
+                  className="w-full h-auto object-contain"
                 />
               </figure>
             </Reveal>
