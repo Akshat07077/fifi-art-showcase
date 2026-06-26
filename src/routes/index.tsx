@@ -1,6 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import { Menu, X } from "lucide-react";
 
 import {
   Accordion,
@@ -164,6 +165,15 @@ const FAQS = [
 function LandingPage() {
   const [filter, setFilter] = useState<Category>("All");
   const [active, setActive] = useState<Work | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  const navLinks = [
+    { href: "#works", label: "Gallery" },
+    { href: "#ritual", label: "Process" },
+    { href: "#artist", label: "Artist" },
+    { href: "#faq", label: "FAQ" },
+    { href: "#booking", label: "Book" },
+  ];
 
   const visible = useMemo(
     () => (filter === "All" ? WORKS : WORKS.filter((w) => w.category === filter)),
@@ -180,13 +190,66 @@ function LandingPage() {
           Fifi Poke
         </a>
         <nav className="hidden md:flex gap-8 text-[10px] uppercase tracking-[0.25em] font-medium">
-          <a href="#works" className="hover:opacity-60 transition-opacity">Gallery</a>
-          <a href="#ritual" className="hover:opacity-60 transition-opacity">Process</a>
-          <a href="#artist" className="hover:opacity-60 transition-opacity">Artist</a>
-          <a href="#faq" className="hover:opacity-60 transition-opacity">FAQ</a>
-          <a href="#booking" className="hover:opacity-60 transition-opacity">Book</a>
+          {navLinks.map((l) => (
+            <a key={l.href} href={l.href} className="hover:opacity-60 transition-opacity">
+              {l.label}
+            </a>
+          ))}
         </nav>
+        <button
+          type="button"
+          onClick={() => setMenuOpen(true)}
+          aria-label="Open menu"
+          className="md:hidden inline-flex items-center justify-center w-10 h-10 -mr-2"
+        >
+          <Menu className="w-5 h-5" />
+        </button>
       </header>
+
+      {/* Mobile menu overlay */}
+      <AnimatePresence>
+        {menuOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+            className="fixed inset-0 z-50 bg-ink text-canvas md:hidden flex flex-col"
+            role="dialog"
+            aria-modal="true"
+          >
+            <div className="flex items-center justify-between px-6 py-5">
+              <span className="font-serif text-xl italic font-medium">Fifi Poke</span>
+              <button
+                type="button"
+                onClick={() => setMenuOpen(false)}
+                aria-label="Close menu"
+                className="inline-flex items-center justify-center w-10 h-10 -mr-2"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <nav className="flex-1 flex flex-col justify-center px-6 gap-6">
+              {navLinks.map((l, i) => (
+                <motion.a
+                  key={l.href}
+                  href={l.href}
+                  onClick={() => setMenuOpen(false)}
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: 0.08 + i * 0.06, ease: [0.16, 1, 0.3, 1] }}
+                  className="font-serif text-4xl italic font-medium tracking-tight hover:opacity-60 transition-opacity"
+                >
+                  {l.label}
+                </motion.a>
+              ))}
+            </nav>
+            <div className="px-6 py-8 text-[10px] uppercase tracking-[0.3em] text-canvas/50">
+              Delhi · By Appointment
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* Sticky vertical section index */}
       <nav className="fixed left-8 top-1/2 -translate-y-1/2 hidden xl:flex flex-col gap-6 z-30">
