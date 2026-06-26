@@ -146,8 +146,12 @@
     border-color: var(--color-border);
   }
 
+  html {
+    scroll-padding-top: 7rem;
+  }
+
   body {
-    background-color: var(--color-background);
+    background-color: var(--color-canvas);
     color: var(--color-foreground);
   }
 }

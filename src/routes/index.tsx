@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useCallback, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, X } from "lucide-react";
 
@@ -12,6 +12,19 @@ import {
 import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Reveal } from "@/components/landing/Reveal";
 import { SmoothScroll } from "@/components/landing/SmoothScroll";
+import { useMobileMenu } from "@/hooks/use-mobile-menu";
+import {
+  INSTAGRAM_LABEL,
+  INSTAGRAM_URL,
+  SITE_URL,
+  STUDIO_CITY,
+  STUDIO_COUNTRY,
+  STUDIO_EMAIL,
+  STUDIO_EMAIL_URL,
+  STUDIO_POSTAL_CODE,
+  STUDIO_STREET,
+  WHATSAPP_URL,
+} from "@/lib/site-config";
 
 import heroNeedle from "@/assets/hero-needle.jpg";
 import artistPortrait from "@/assets/artist-portrait.jpg";
@@ -38,14 +51,14 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: SITE_TITLE },
       { property: "og:description", content: SITE_DESC },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "/" },
+      { property: "og:url", content: SITE_URL },
       { property: "og:image", content: heroNeedle },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: SITE_TITLE },
       { name: "twitter:description", content: SITE_DESC },
       { name: "twitter:image", content: heroNeedle },
     ],
-    links: [{ rel: "canonical", href: "/" }],
+    links: [{ rel: "canonical", href: SITE_URL }],
     scripts: [
       {
         type: "application/ld+json",
@@ -57,11 +70,12 @@ export const Route = createFileRoute("/")({
           image: heroNeedle,
           address: {
             "@type": "PostalAddress",
-            streetAddress: "Hauz Khas Village",
-            addressLocality: "New Delhi",
-            addressCountry: "IN",
+            streetAddress: STUDIO_STREET,
+            addressLocality: STUDIO_CITY,
+            postalCode: STUDIO_POSTAL_CODE,
+            addressCountry: STUDIO_COUNTRY,
           },
-          sameAs: ["https://instagram.com/fifipoke"],
+          sameAs: [INSTAGRAM_URL],
           priceRange: "₹₹",
         }),
       },
@@ -92,6 +106,7 @@ const WORKS: Work[] = [
   { id: "w6", src: gallery6, alt: "Elegant ear piercing with gold hoop and stud", title: "Lobe + Helix", category: "Piercings", meta: "14k gold", ratio: "aspect-[4/5]" },
 ];
 
+/** Grid preview images — replace files in src/assets/ with posts from @fifipoke. */
 const INSTAGRAM = [ig1, ig2, ig3, ig4, gallery2, gallery1, gallery3, gallery6];
 
 const PROCESS_STEPS = [
@@ -162,10 +177,14 @@ const FAQS = [
   },
 ];
 
+const SECTION_SCROLL = "scroll-mt-28";
+
 function LandingPage() {
   const [filter, setFilter] = useState<Category>("All");
   const [active, setActive] = useState<Work | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
+  const closeMenu = useCallback(() => setMenuOpen(false), []);
+  const { menuRef, closeButtonRef } = useMobileMenu(menuOpen, closeMenu);
 
   const navLinks = [
     { href: "#works", label: "Gallery" },
@@ -185,7 +204,7 @@ function LandingPage() {
       <SmoothScroll />
 
       {/* Top bar */}
-      <header className="fixed top-0 inset-x-0 z-40 px-6 lg:px-12 py-5 flex items-center justify-between mix-blend-difference text-canvas">
+      <header className="fixed top-0 inset-x-0 z-40 px-6 lg:px-12 py-5 flex items-center justify-between bg-canvas/85 backdrop-blur-md text-ink border-b border-ink/5">
         <a href="#top" className="font-serif text-xl tracking-tight font-medium italic">
           Fifi Poke
         </a>
@@ -210,6 +229,7 @@ function LandingPage() {
       <AnimatePresence>
         {menuOpen && (
           <motion.div
+            ref={menuRef}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -217,12 +237,14 @@ function LandingPage() {
             className="fixed inset-0 z-50 bg-ink text-canvas md:hidden flex flex-col"
             role="dialog"
             aria-modal="true"
+            aria-label="Site navigation"
           >
             <div className="flex items-center justify-between px-6 py-5">
               <span className="font-serif text-xl italic font-medium">Fifi Poke</span>
               <button
+                ref={closeButtonRef}
                 type="button"
-                onClick={() => setMenuOpen(false)}
+                onClick={closeMenu}
                 aria-label="Close menu"
                 className="inline-flex items-center justify-center w-10 h-10 -mr-2"
               >
@@ -234,7 +256,7 @@ function LandingPage() {
                 <motion.a
                   key={l.href}
                   href={l.href}
-                  onClick={() => setMenuOpen(false)}
+                  onClick={closeMenu}
                   initial={{ opacity: 0, y: 14 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.08 + i * 0.06, ease: [0.16, 1, 0.3, 1] }}
@@ -329,7 +351,7 @@ function LandingPage() {
       </section>
 
       {/* Gallery */}
-      <section id="works" className="py-28 lg:py-40 bg-paper">
+      <section id="works" className={`py-28 lg:py-40 bg-paper ${SECTION_SCROLL}`}>
         <div className="max-w-7xl mx-auto px-6 lg:px-24">
           <Reveal className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 lg:mb-20">
             <div className="max-w-[48ch]">
@@ -363,44 +385,37 @@ function LandingPage() {
             </div>
           </Reveal>
 
-          <motion.div layout className="columns-1 md:columns-2 lg:columns-3 gap-6 lg:gap-8 [column-fill:_balance]">
-            <AnimatePresence mode="popLayout">
-              {visible.map((w, i) => (
-                <motion.button
-                  layout
-                  key={w.id}
-                  type="button"
-                  onClick={() => setActive(w)}
-                  initial={{ opacity: 0, y: 14 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.55, delay: i * 0.04, ease: [0.16, 1, 0.3, 1] }}
-                  className="group relative mb-6 lg:mb-8 block w-full text-left break-inside-avoid focus:outline-none focus-visible:ring-2 focus-visible:ring-ink/40 rounded-[2px]"
-                  aria-label={`Open ${w.title}`}
-                >
-                  <figure className={"w-full overflow-hidden rounded-[2px] ring-1 ring-ink/5 bg-canvas " + w.ratio}>
-                    <img
-                      src={w.src}
-                      alt={w.alt}
-                      loading="lazy"
-                      className="w-full h-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
-                    />
-                  </figure>
-                  <figcaption className="mt-3 flex items-baseline justify-between gap-4">
-                    <span className="font-serif italic text-lg leading-none">{w.title}</span>
-                    <span className="text-[10px] uppercase tracking-[0.2em] text-ink/40">
-                      {w.category} · {w.meta}
-                    </span>
-                  </figcaption>
-                </motion.button>
-              ))}
-            </AnimatePresence>
-          </motion.div>
+          <div className="columns-1 md:columns-2 lg:columns-3 gap-6 lg:gap-8 [column-fill:_balance]">
+            {visible.map((w) => (
+              <button
+                key={w.id}
+                type="button"
+                onClick={() => setActive(w)}
+                className="group relative mb-6 lg:mb-8 block w-full text-left break-inside-avoid bg-transparent border-0 p-0 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-ink/40 rounded-[2px]"
+                aria-label={`Open ${w.title}`}
+              >
+                <figure className={"w-full overflow-hidden rounded-[2px] ring-1 ring-ink/5 bg-canvas " + w.ratio}>
+                  <img
+                    src={w.src}
+                    alt={w.alt}
+                    loading="lazy"
+                    className="w-full h-full object-cover transition-transform duration-[1200ms] ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:scale-[1.03]"
+                  />
+                </figure>
+                <figcaption className="mt-3 flex items-baseline justify-between gap-4">
+                  <span className="font-serif italic text-lg leading-none">{w.title}</span>
+                  <span className="text-[10px] uppercase tracking-[0.2em] text-ink/40">
+                    {w.category} · {w.meta}
+                  </span>
+                </figcaption>
+              </button>
+            ))}
+          </div>
         </div>
       </section>
 
       {/* Process */}
-      <section id="ritual" className="py-28 lg:py-40">
+      <section id="ritual" className={`py-28 lg:py-40 ${SECTION_SCROLL}`}>
         <div className="max-w-7xl mx-auto px-6 lg:px-24">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
             <div className="lg:col-span-5">
@@ -433,7 +448,7 @@ function LandingPage() {
       </section>
 
       {/* Artist */}
-      <section id="artist" className="py-28 lg:py-40 bg-paper">
+      <section id="artist" className={`py-28 lg:py-40 bg-paper ${SECTION_SCROLL}`}>
         <div className="max-w-7xl mx-auto px-6 lg:px-24">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
             <Reveal className="lg:col-span-6 order-2 lg:order-1">
@@ -508,7 +523,7 @@ function LandingPage() {
       </section>
 
       {/* FAQ */}
-      <section id="faq" className="py-28 lg:py-40 bg-paper">
+      <section id="faq" className={`py-28 lg:py-40 bg-paper ${SECTION_SCROLL}`}>
         <div className="max-w-7xl mx-auto px-6 lg:px-24 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
           <Reveal className="lg:col-span-4">
             <span className="block text-[11px] uppercase tracking-[0.3em] text-ink/50 mb-4">
@@ -548,12 +563,12 @@ function LandingPage() {
               </h2>
             </div>
             <a
-              href="https://instagram.com/fifipoke"
+              href={INSTAGRAM_URL}
               target="_blank"
               rel="noreferrer"
               className="group inline-flex items-center gap-3 text-sm font-medium text-ink/70 hover:text-ink transition-colors"
             >
-              <span>@fifipoke</span>
+              <span>{INSTAGRAM_LABEL}</span>
               <span aria-hidden className="text-xs transition-transform group-hover:translate-x-1">→</span>
             </a>
           </Reveal>
@@ -562,7 +577,7 @@ function LandingPage() {
               {INSTAGRAM.map((src, i) => (
                 <a
                   key={i}
-                  href="https://instagram.com/fifipoke"
+                  href={INSTAGRAM_URL}
                   target="_blank"
                   rel="noreferrer"
                   className="group block aspect-square overflow-hidden rounded-[2px] ring-1 ring-ink/5"
@@ -581,7 +596,7 @@ function LandingPage() {
       </section>
 
       {/* Booking */}
-      <section id="booking" className="py-32 lg:py-48 bg-ink text-canvas">
+      <section id="booking" className={`py-32 lg:py-48 bg-ink text-canvas ${SECTION_SCROLL}`}>
         <div className="max-w-5xl mx-auto px-6 lg:px-24 text-center">
           <Reveal>
             <span className="block text-[11px] uppercase tracking-[0.3em] text-canvas/50 mb-8">
@@ -597,19 +612,19 @@ function LandingPage() {
           <Reveal delay={0.1}>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 w-full max-w-3xl mx-auto">
               <ContactCard
-                href="https://wa.me/919999999999"
+                href={WHATSAPP_URL}
                 eyebrow="WhatsApp"
                 label="Direct message"
               />
               <ContactCard
-                href="https://instagram.com/fifipoke"
+                href={INSTAGRAM_URL}
                 eyebrow="Instagram"
-                label="@fifipoke"
+                label={INSTAGRAM_LABEL}
               />
               <ContactCard
-                href="mailto:studio@fifipoke.art"
+                href={STUDIO_EMAIL_URL}
                 eyebrow="Email"
-                label="studio@fifipoke.art"
+                label={STUDIO_EMAIL}
               />
             </div>
           </Reveal>
@@ -627,15 +642,15 @@ function LandingPage() {
           </div>
           <div className="space-y-3 text-xs text-ink/60 leading-relaxed">
             <p className="text-[10px] uppercase tracking-[0.25em] text-ink/40">Studio</p>
-            <p>Hauz Khas Village<br/>New Delhi, 110016</p>
+            <p>{STUDIO_STREET}<br/>{STUDIO_CITY}, {STUDIO_POSTAL_CODE}</p>
             <p>Tue — Sat · 11:00 – 19:00<br/>By appointment only</p>
           </div>
           <div className="space-y-3 text-xs text-ink/60">
             <p className="text-[10px] uppercase tracking-[0.25em] text-ink/40">Elsewhere</p>
             <ul className="space-y-2">
-              <li><a className="hover:text-ink transition-colors" href="https://instagram.com/fifipoke" target="_blank" rel="noreferrer">Instagram</a></li>
-              <li><a className="hover:text-ink transition-colors" href="https://wa.me/919999999999">WhatsApp</a></li>
-              <li><a className="hover:text-ink transition-colors" href="mailto:studio@fifipoke.art">Email the studio</a></li>
+              <li><a className="hover:text-ink transition-colors" href={INSTAGRAM_URL} target="_blank" rel="noreferrer">Instagram</a></li>
+              <li><a className="hover:text-ink transition-colors" href={WHATSAPP_URL}>WhatsApp</a></li>
+              <li><a className="hover:text-ink transition-colors" href={STUDIO_EMAIL_URL}>Email the studio</a></li>
             </ul>
           </div>
         </div>
