@@ -27,15 +27,13 @@ import {
 } from "@/lib/site-config";
 
 import heroNeedle from "@/assets/hero-needle.jpg";
-import artistPortrait from "@/assets/artist-portrait.jpg";
-import gallery1 from "@/assets/gallery-1.jpg";
-import gallery2 from "@/assets/gallery-2.jpg";
+import artistPortrait from "@/assets/IMG_4406.avif";
+import workFloral from "@/assets/work-floral.png";
+import workKnight from "@/assets/work-knight.png";
 import gallery3 from "@/assets/gallery-3.jpg";
 import gallery4 from "@/assets/gallery-4.jpg";
 import gallery5 from "@/assets/gallery-5.jpg";
 import gallery6 from "@/assets/gallery-6.jpg";
-import ig1 from "@/assets/ig-1.jpg";
-import ig2 from "@/assets/ig-2.jpg";
 import ig3 from "@/assets/ig-3.jpg";
 import ig4 from "@/assets/ig-4.jpg";
 
@@ -98,16 +96,31 @@ type Work = {
 };
 
 const WORKS: Work[] = [
-  { id: "w1", src: gallery1, alt: "Fine-line floral handpoke tattoo on inner wrist", title: "Wildflower", category: "Handpoke", meta: "Inner wrist · 2h", ratio: "aspect-[5/7]" },
-  { id: "w2", src: gallery2, alt: "Small fine-line butterfly tattoo on forearm", title: "Monarch", category: "Handpoke", meta: "Forearm · 1.5h", ratio: "aspect-square" },
+  {
+    id: "w1",
+    src: workFloral,
+    alt: "Fine-line floral tattoo on upper arm",
+    title: "Botanical Stem",
+    category: "Handpoke",
+    meta: "Upper arm · fine line",
+    ratio: "aspect-[4/5]",
+  },
+  {
+    id: "w2",
+    src: workKnight,
+    alt: "Illustrative knight with sword tattoo on upper arm",
+    title: "The Knight",
+    category: "Handpoke",
+    meta: "Upper arm · dotwork",
+    ratio: "aspect-[4/5]",
+  },
   { id: "w3", src: gallery3, alt: "Minimal geometric line tattoo on forearm", title: "Acute", category: "Machine", meta: "Forearm · 1h", ratio: "aspect-[5/8]" },
   { id: "w4", src: gallery4, alt: "Fine-line snake tattoo wrapping the ankle", title: "Ouroboros", category: "Handpoke", meta: "Ankle · 3h", ratio: "aspect-[4/5]" },
   { id: "w5", src: gallery5, alt: "Hand-drawn flash tattoo sheet on cream paper", title: "Flash Sheet 03", category: "Flash", meta: "Available designs", ratio: "aspect-[4/3]" },
   { id: "w6", src: gallery6, alt: "Elegant ear piercing with gold hoop and stud", title: "Lobe + Helix", category: "Piercings", meta: "14k gold", ratio: "aspect-[4/5]" },
 ];
 
-/** Grid preview images — replace files in src/assets/ with posts from @fifipoke. */
-const INSTAGRAM = [ig1, ig2, ig3, ig4, gallery2, gallery1, gallery3, gallery6];
+const INSTAGRAM = [workFloral, workKnight, artistPortrait, ig3, ig4, gallery3, gallery4, gallery6];
 
 const PROCESS_STEPS = [
   {
@@ -285,14 +298,58 @@ function LandingPage() {
       </nav>
 
       {/* Hero */}
-      <section id="top" className="relative min-h-screen flex flex-col justify-center px-6 lg:px-24 pt-32 pb-20">
-        <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-end">
-          <div className="lg:col-span-8">
+      <section id="top" className="relative min-h-[100svh] lg:min-h-screen overflow-hidden">
+        <div className="lg:grid lg:grid-cols-12 lg:min-h-screen">
+          {/* Visual panel — always visible (was hidden below lg) */}
+          <motion.div
+            initial={{ opacity: 0, scale: 1.03 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
+            className="relative h-[50vh] min-h-[280px] sm:h-[55vh] lg:col-span-5 lg:col-start-8 lg:h-auto lg:min-h-screen"
+          >
+            <img
+              src={artistPortrait}
+              alt="Fifi, handpoke tattoo artist in her Delhi studio"
+              width={1024}
+              height={1280}
+              className="absolute inset-0 h-full w-full object-cover object-[center_20%]"
+            />
+            <div className="absolute inset-0 bg-gradient-to-b from-canvas/40 via-transparent to-canvas sm:to-canvas/95 lg:bg-gradient-to-l lg:from-canvas/90 lg:via-canvas/25 lg:to-transparent" />
+
+            <motion.figure
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, delay: 0.35, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute bottom-5 left-5 w-[30%] max-w-[7.5rem] overflow-hidden rounded-[2px] ring-2 ring-canvas shadow-md sm:bottom-8 sm:left-8 sm:max-w-[8.5rem] lg:bottom-16 lg:-left-10 lg:w-36 lg:max-w-none"
+            >
+              <img
+                src={workFloral}
+                alt="Fine-line floral tattoo detail"
+                className="aspect-[4/5] w-full object-cover"
+              />
+            </motion.figure>
+
+            <motion.figure
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.9, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
+              className="absolute bottom-5 right-5 w-[30%] max-w-[7.5rem] overflow-hidden rounded-[2px] ring-2 ring-canvas shadow-md sm:bottom-8 sm:right-8 sm:max-w-[8.5rem] lg:top-28 lg:right-auto lg:left-12 lg:w-32 lg:max-w-none"
+            >
+              <img
+                src={workKnight}
+                alt="Illustrative knight tattoo detail"
+                className="aspect-[4/5] w-full object-cover"
+              />
+            </motion.figure>
+          </motion.div>
+
+          {/* Copy */}
+          <div className="relative z-10 flex flex-col justify-center px-6 lg:px-16 xl:px-24 pb-16 pt-8 lg:col-span-7 lg:col-start-1 lg:row-start-1 lg:min-h-screen lg:py-32 lg:pr-8">
             <motion.span
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              className="block text-[11px] uppercase tracking-[0.3em] text-ink/50 mb-8"
+              className="block text-[11px] uppercase tracking-[0.3em] text-ink/50 mb-6 lg:mb-8"
             >
               Delhi · Handpoke &amp; Machine
             </motion.span>
@@ -300,7 +357,7 @@ function LandingPage() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
-              className="font-serif text-[clamp(2.75rem,7vw,5.75rem)] leading-[0.95] text-balance font-medium tracking-[-0.01em] mb-12"
+              className="font-serif text-[clamp(2.5rem,8vw,5.75rem)] leading-[0.95] text-balance font-medium tracking-[-0.01em] mb-8 lg:mb-12 max-w-[14ch] lg:max-w-none"
             >
               The silent dialogue
               <br />
@@ -327,26 +384,31 @@ function LandingPage() {
                 View the archive
               </a>
             </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.4 }}
+              className="mt-10 hidden sm:grid grid-cols-3 gap-2 max-w-md lg:max-w-sm"
+            >
+              {[workFloral, workKnight, heroNeedle].map((src, i) => (
+                <a
+                  key={i}
+                  href="#works"
+                  className="group relative aspect-[4/5] overflow-hidden rounded-[2px] ring-1 ring-ink/10"
+                >
+                  <img
+                    src={src}
+                    alt=""
+                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                  />
+                </a>
+              ))}
+            </motion.div>
+            <p className="mt-8 text-[10px] uppercase tracking-[0.25em] text-ink/40 hidden lg:block">
+              Fifi Poke · Hauz Khas Village
+            </p>
           </div>
-          <motion.div
-            initial={{ opacity: 0, scale: 1.02 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 1.2, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-4 hidden lg:block"
-          >
-            <figure className="w-full aspect-[4/5] overflow-hidden rounded-[2px] ring-1 ring-ink/5">
-              <img
-                src={heroNeedle}
-                alt="A handpoke needle resting above a ceramic well of black ink"
-                width={768}
-                height={1152}
-                className="w-full h-full object-cover"
-              />
-            </figure>
-            <figcaption className="mt-3 text-[10px] uppercase tracking-[0.25em] text-ink/40">
-              Studio detail · 2024
-            </figcaption>
-          </motion.div>
         </div>
       </section>
 
@@ -485,7 +547,7 @@ function LandingPage() {
               <figure className="w-full aspect-[3/4] overflow-hidden rounded-[2px] ring-1 ring-ink/5 bg-canvas">
                 <img
                   src={artistPortrait}
-                  alt="Portrait of Fifi, tattoo artist, in her Delhi studio"
+                  alt="Portrait of Fifi, handpoke tattoo artist"
                   width={1024}
                   height={1344}
                   loading="lazy"
