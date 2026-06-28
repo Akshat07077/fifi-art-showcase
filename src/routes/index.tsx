@@ -13,69 +13,45 @@ import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { Reveal } from "@/components/landing/Reveal";
 import { SmoothScroll } from "@/components/landing/SmoothScroll";
 import { useMobileMenu } from "@/hooks/use-mobile-menu";
-import {
-  INSTAGRAM_LABEL,
-  INSTAGRAM_URL,
-  SITE_URL,
-  STUDIO_CITY,
-  STUDIO_COUNTRY,
-  STUDIO_EMAIL,
-  STUDIO_EMAIL_URL,
-  STUDIO_POSTAL_CODE,
-  STUDIO_STREET,
-  WHATSAPP_URL,
-} from "@/lib/site-config";
+import type { GalleryCategory } from "@/config/artist.content";
+import { site } from "@/config/site";
 
-import heroNeedle from "@/assets/hero-needle.jpg";
-import artistPortrait from "@/assets/IMG_4406.avif";
-import artistAbout from "@/assets/0b2b8f_d91a39145cfb4403844281fe5aabe327~mv2.avif";
-import workFloral from "@/assets/work-floral.png";
-import workKnight from "@/assets/work-knight.png";
-import gallery3 from "@/assets/gallery-3.jpg";
-import gallery4 from "@/assets/gallery-4.jpg";
-import gallery5 from "@/assets/gallery-5.jpg";
-import gallery6 from "@/assets/gallery-6.jpg";
-import ig3 from "@/assets/ig-3.jpg";
-import ig4 from "@/assets/ig-4.jpg";
-
-const SITE_TITLE = "Fifi Poke — Handpoke & Machine Tattoo Studio, Delhi";
-const SITE_DESC =
-  "Delhi boutique tattoo studio by Fifi. Custom handpoke tattoos, fine-line machine work, flash designs and piercings — by appointment in Hauz Khas.";
+const SECTION_SCROLL = "scroll-mt-28";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: SITE_TITLE },
-      { name: "description", content: SITE_DESC },
-      { property: "og:title", content: SITE_TITLE },
-      { property: "og:description", content: SITE_DESC },
+      { title: site.seo.title },
+      { name: "description", content: site.seo.description },
+      { property: "og:title", content: site.seo.title },
+      { property: "og:description", content: site.seo.description },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: SITE_URL },
-      { property: "og:image", content: heroNeedle },
+      { property: "og:url", content: site.env.SITE_URL },
+      { property: "og:image", content: site.seo.ogImage },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: SITE_TITLE },
-      { name: "twitter:description", content: SITE_DESC },
-      { name: "twitter:image", content: heroNeedle },
+      { name: "twitter:title", content: site.seo.title },
+      { name: "twitter:description", content: site.seo.description },
+      { name: "twitter:image", content: site.seo.ogImage },
     ],
-    links: [{ rel: "canonical", href: SITE_URL }],
+    links: [{ rel: "canonical", href: site.env.SITE_URL }],
     scripts: [
       {
         type: "application/ld+json",
         children: JSON.stringify({
           "@context": "https://schema.org",
           "@type": "TattooParlor",
-          name: "Fifi Poke",
-          description: SITE_DESC,
-          image: heroNeedle,
+          name: site.brand.name,
+          description: site.seo.description,
+          image: site.seo.ogImage,
           address: {
             "@type": "PostalAddress",
-            streetAddress: STUDIO_STREET,
-            addressLocality: STUDIO_CITY,
-            postalCode: STUDIO_POSTAL_CODE,
-            addressCountry: STUDIO_COUNTRY,
+            streetAddress: site.env.STUDIO_STREET,
+            addressLocality: site.env.STUDIO_CITY,
+            postalCode: site.env.STUDIO_POSTAL_CODE,
+            addressCountry: site.env.STUDIO_COUNTRY,
           },
-          sameAs: [INSTAGRAM_URL],
-          priceRange: "₹₹",
+          sameAs: [site.env.INSTAGRAM_URL],
+          priceRange: site.env.PRICE_RANGE,
         }),
       },
     ],
@@ -83,133 +59,17 @@ export const Route = createFileRoute("/")({
   component: LandingPage,
 });
 
-type Category = "All" | "Handpoke" | "Machine" | "Flash" | "Piercings";
-const CATEGORIES: Category[] = ["All", "Handpoke", "Machine", "Flash", "Piercings"];
-
-type Work = {
-  id: string;
-  src: string;
-  alt: string;
-  title: string;
-  category: Exclude<Category, "All">;
-  meta: string;
-  ratio: string;
-};
-
-const WORKS: Work[] = [
-  {
-    id: "w1",
-    src: workFloral,
-    alt: "Fine-line floral tattoo on upper arm",
-    title: "Botanical Stem",
-    category: "Handpoke",
-    meta: "Upper arm · fine line",
-    ratio: "aspect-[4/5]",
-  },
-  {
-    id: "w2",
-    src: workKnight,
-    alt: "Illustrative knight with sword tattoo on upper arm",
-    title: "The Knight",
-    category: "Handpoke",
-    meta: "Upper arm · dotwork",
-    ratio: "aspect-[4/5]",
-  },
-  { id: "w3", src: gallery3, alt: "Minimal geometric line tattoo on forearm", title: "Acute", category: "Machine", meta: "Forearm · 1h", ratio: "aspect-[5/8]" },
-  { id: "w4", src: gallery4, alt: "Fine-line snake tattoo wrapping the ankle", title: "Ouroboros", category: "Handpoke", meta: "Ankle · 3h", ratio: "aspect-[4/5]" },
-  { id: "w5", src: gallery5, alt: "Hand-drawn flash tattoo sheet on cream paper", title: "Flash Sheet 03", category: "Flash", meta: "Available designs", ratio: "aspect-[4/3]" },
-  { id: "w6", src: gallery6, alt: "Elegant ear piercing with gold hoop and stud", title: "Lobe + Helix", category: "Piercings", meta: "14k gold", ratio: "aspect-[4/5]" },
-];
-
-const INSTAGRAM = [workFloral, workKnight, artistPortrait, ig3, ig4, gallery3, gallery4, gallery6];
-
-const PROCESS_STEPS = [
-  {
-    no: "01. Intention",
-    title: "The Consultation",
-    body: "Every mark begins as a conversation. We discuss your vision, placement, and the narrative behind the design to ensure the final piece resonates with your individual story.",
-  },
-  {
-    no: "02. Manifestation",
-    title: "The Design",
-    body: "Custom sketches are developed with a focus on anatomy and flow. Whether it's a flash piece or a bespoke commission, the drawing is refined until it feels correct.",
-  },
-  {
-    no: "03. Impression",
-    title: "The Session",
-    body: "A quiet, meditative environment in the Delhi studio. Handpoke is slower and ritualistic; machine work offers precision and depth. Both held to clinical hygiene standards.",
-  },
-  {
-    no: "04. Preservation",
-    title: "Aftercare",
-    body: "Healing is as critical as the application. You leave with a curated aftercare kit and clear instructions so your tattoo heals with crisp clarity and longevity.",
-  },
-];
-
-const TESTIMONIALS = [
-  {
-    quote: "Fifi's studio feels more like a gallery than a tattoo shop. The handpoke process was meditative — I left with a piece I am proud to wear forever.",
-    name: "Ananya S.",
-    place: "Delhi",
-  },
-  {
-    quote: "She took the time to understand the story behind the design. The line work is impossibly fine and has healed beautifully.",
-    name: "Ishaan R.",
-    place: "Mumbai",
-  },
-  {
-    quote: "Calm hands, careful eye, immaculate hygiene. The most considered tattoo experience I've had anywhere.",
-    name: "Mira K.",
-    place: "Bengaluru",
-  },
-];
-
-const FAQS = [
-  {
-    q: "How do I book an appointment?",
-    a: "Reach out via WhatsApp, Instagram DM, or email with a short description of your idea, placement, and approximate size. A deposit confirms your slot once the design is approved.",
-  },
-  {
-    q: "Does it hurt?",
-    a: "Handpoke is generally gentler than machine work because there is no vibration. Sensation depends on placement and your own tolerance — I'll guide you through pacing and breaks.",
-  },
-  {
-    q: "Handpoke or machine — which should I choose?",
-    a: "Handpoke suits delicate, organic compositions and heals with a soft, lived-in texture. Machine work gives crisp saturation and is better for denser or larger pieces. We'll decide together.",
-  },
-  {
-    q: "How is pricing determined?",
-    a: "Pricing is based on size, complexity, placement, and time. Small flash pieces start at a flat rate; custom work is quoted after consultation. A non-refundable deposit secures the booking.",
-  },
-  {
-    q: "What about healing?",
-    a: "Full healing takes 2–4 weeks. You'll receive a curated aftercare kit and written instructions. Avoid sun, swimming, and friction during the first two weeks.",
-  },
-  {
-    q: "What hygiene standards do you follow?",
-    a: "Single-use, sterile needles and ink caps; medical-grade barrier film; hospital-grade surface disinfection between every client. All sharps are disposed of in regulated containers.",
-  },
-];
-
-const SECTION_SCROLL = "scroll-mt-28";
+type Work = (typeof site.works)[number];
 
 function LandingPage() {
-  const [filter, setFilter] = useState<Category>("All");
+  const [filter, setFilter] = useState<GalleryCategory>("All");
   const [active, setActive] = useState<Work | null>(null);
   const [menuOpen, setMenuOpen] = useState(false);
   const closeMenu = useCallback(() => setMenuOpen(false), []);
   const { menuRef, closeButtonRef } = useMobileMenu(menuOpen, closeMenu);
 
-  const navLinks = [
-    { href: "#works", label: "Gallery" },
-    { href: "#ritual", label: "Process" },
-    { href: "#artist", label: "Artist" },
-    { href: "#faq", label: "FAQ" },
-    { href: "#booking", label: "Book" },
-  ];
-
   const visible = useMemo(
-    () => (filter === "All" ? WORKS : WORKS.filter((w) => w.category === filter)),
+    () => (filter === "All" ? site.works : site.works.filter((w) => w.category === filter)),
     [filter],
   );
 
@@ -220,10 +80,10 @@ function LandingPage() {
       {/* Top bar */}
       <header className="fixed top-0 inset-x-0 z-40 px-6 lg:px-12 py-5 flex items-center justify-between bg-canvas/85 backdrop-blur-md text-ink border-b border-ink/5">
         <a href="#top" className="font-serif text-xl tracking-tight font-medium italic">
-          Fifi Poke
+          {site.brand.name}
         </a>
         <nav className="hidden md:flex gap-8 text-[10px] uppercase tracking-[0.25em] font-medium">
-          {navLinks.map((l) => (
+          {site.content.nav.map((l) => (
             <a key={l.href} href={l.href} className="hover:opacity-60 transition-opacity">
               {l.label}
             </a>
@@ -254,7 +114,7 @@ function LandingPage() {
             aria-label="Site navigation"
           >
             <div className="flex items-center justify-between px-6 py-5">
-              <span className="font-serif text-xl italic font-medium">Fifi Poke</span>
+              <span className="font-serif text-xl italic font-medium">{site.brand.name}</span>
               <button
                 ref={closeButtonRef}
                 type="button"
@@ -266,7 +126,7 @@ function LandingPage() {
               </button>
             </div>
             <nav className="flex-1 flex flex-col justify-center px-6 gap-6">
-              {navLinks.map((l, i) => (
+              {site.content.nav.map((l, i) => (
                 <motion.a
                   key={l.href}
                   href={l.href}
@@ -281,7 +141,7 @@ function LandingPage() {
               ))}
             </nav>
             <div className="px-6 py-8 text-[10px] uppercase tracking-[0.3em] text-canvas/50">
-              Delhi · By Appointment
+              {site.ui.mobileMenuTagline}
             </div>
           </motion.div>
         )}
@@ -290,10 +150,9 @@ function LandingPage() {
       {/* Sticky vertical section index */}
       <nav className="fixed left-8 top-1/2 -translate-y-1/2 hidden xl:flex flex-col gap-6 z-30">
         <div className="flex flex-col gap-5 text-[10px] tracking-[0.25em] font-medium text-ink/40 uppercase [writing-mode:vertical-rl] rotate-180">
-          <a href="#works" className="hover:text-ink transition-colors">01 · Gallery</a>
-          <a href="#ritual" className="hover:text-ink transition-colors">02 · Process</a>
-          <a href="#artist" className="hover:text-ink transition-colors">03 · Artist</a>
-          <a href="#booking" className="hover:text-ink transition-colors">04 · Booking</a>
+          {site.content.sideNav.map((l) => (
+            <a key={l.href} href={l.href} className="hover:text-ink transition-colors">{l.label}</a>
+          ))}
         </div>
         <div className="w-px h-16 bg-ink/10 mx-auto" />
       </nav>
@@ -309,8 +168,8 @@ function LandingPage() {
             className="relative h-[50vh] min-h-[280px] sm:h-[55vh] lg:col-span-5 lg:col-start-8 lg:h-auto lg:min-h-screen"
           >
             <img
-              src={artistPortrait}
-              alt="Fifi, handpoke tattoo artist in her Delhi studio"
+              src={site.hero.portrait}
+              alt={site.hero.portraitAlt}
               width={1024}
               height={1280}
               className="absolute inset-0 h-full w-full object-cover object-[center_20%]"
@@ -324,8 +183,8 @@ function LandingPage() {
               className="absolute bottom-5 left-5 w-[30%] max-w-[7.5rem] overflow-hidden rounded-[2px] ring-2 ring-canvas shadow-md sm:bottom-8 sm:left-8 sm:max-w-[8.5rem] lg:bottom-16 lg:-left-10 lg:w-36 lg:max-w-none"
             >
               <img
-                src={workFloral}
-                alt="Fine-line floral tattoo detail"
+                src={site.hero.accents[0]}
+                alt={site.hero.accentAlts[0]}
                 className="aspect-[4/5] w-full object-cover"
               />
             </motion.figure>
@@ -337,8 +196,8 @@ function LandingPage() {
               className="absolute bottom-5 right-5 w-[30%] max-w-[7.5rem] overflow-hidden rounded-[2px] ring-2 ring-canvas shadow-md sm:bottom-8 sm:right-8 sm:max-w-[8.5rem] lg:top-28 lg:right-auto lg:left-12 lg:w-32 lg:max-w-none"
             >
               <img
-                src={workKnight}
-                alt="Illustrative knight tattoo detail"
+                src={site.hero.accents[1]}
+                alt={site.hero.accentAlts[1]}
                 className="aspect-[4/5] w-full object-cover"
               />
             </motion.figure>
@@ -352,7 +211,7 @@ function LandingPage() {
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
               className="block text-[11px] uppercase tracking-[0.3em] text-ink/50 mb-6 lg:mb-8"
             >
-              Delhi · Handpoke &amp; Machine
+              {site.hero.eyebrow}
             </motion.span>
             <motion.h1
               initial={{ opacity: 0, y: 20 }}
@@ -360,9 +219,9 @@ function LandingPage() {
               transition={{ duration: 1, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
               className="font-serif text-[clamp(2.5rem,8vw,5.75rem)] leading-[0.95] text-balance font-medium tracking-[-0.01em] mb-8 lg:mb-12 max-w-[14ch] lg:max-w-none"
             >
-              The silent dialogue
+              {site.content.hero.headlineBefore}
               <br />
-              of <span className="italic font-normal">needle and skin</span>.
+              of <span className="italic font-normal">{site.content.hero.headlineItalic}</span>.
             </motion.h1>
             <motion.div
               initial={{ opacity: 0 }}
@@ -374,7 +233,7 @@ function LandingPage() {
                 href="#booking"
                 className="inline-flex items-center gap-3 bg-ink text-canvas px-6 py-3 rounded-full text-sm font-medium hover:bg-ink/85 transition-all active:scale-[0.98]"
               >
-                Book Your Session
+                {site.content.hero.primaryCta}
                 <span aria-hidden className="text-xs">→</span>
               </a>
               <a
@@ -382,7 +241,7 @@ function LandingPage() {
                 className="group inline-flex items-center text-sm font-medium text-ink/60 hover:text-ink transition-colors"
               >
                 <span className="mr-2 text-xs transition-transform group-hover:translate-y-0.5">↓</span>
-                View the archive
+                {site.content.hero.secondaryCta}
               </a>
             </motion.div>
 
@@ -392,7 +251,7 @@ function LandingPage() {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="mt-10 hidden sm:grid grid-cols-3 gap-2 max-w-md lg:max-w-sm"
             >
-              {[workFloral, workKnight, heroNeedle].map((src, i) => (
+              {site.hero.strip.map((src, i) => (
                 <a
                   key={i}
                   href="#works"
@@ -407,7 +266,7 @@ function LandingPage() {
               ))}
             </motion.div>
             <p className="mt-8 text-[10px] uppercase tracking-[0.25em] text-ink/40 hidden lg:block">
-              Fifi Poke · Hauz Khas Village
+              {site.hero.locationTag}
             </p>
           </div>
         </div>
@@ -419,14 +278,14 @@ function LandingPage() {
           <Reveal className="flex flex-col md:flex-row md:items-end justify-between gap-8 mb-16 lg:mb-20">
             <div className="max-w-[48ch]">
               <span className="block text-[11px] uppercase tracking-[0.3em] text-ink/50 mb-4">
-                01 · Selected Impressions
+                {site.content.gallery.eyebrow}
               </span>
               <h2 className="font-serif text-3xl lg:text-5xl leading-tight font-medium tracking-[-0.01em]">
-                A quiet archive of permanent marks.
+                {site.content.gallery.title}
               </h2>
             </div>
             <div className="flex gap-2 overflow-x-auto pb-2 md:pb-0 -mx-6 px-6 md:mx-0 md:px-0">
-              {CATEGORIES.map((c) => {
+              {site.categories.map((c) => {
                 const isActive = filter === c;
                 return (
                   <button
@@ -484,16 +343,16 @@ function LandingPage() {
             <div className="lg:col-span-5">
               <Reveal>
                 <span className="block text-[11px] uppercase tracking-[0.3em] text-ink/50 mb-4">
-                  02 · The Method
-                </span>
+                {site.content.process.eyebrow}
+              </span>
                 <h2 className="font-serif text-4xl lg:text-5xl leading-[1.05] font-medium tracking-[-0.01em] lg:sticky lg:top-32">
-                  Four stages of <span className="italic font-normal">synthesis</span>.
+                  Four stages of <span className="italic font-normal">{site.content.process.titleItalic}</span>.
                 </h2>
               </Reveal>
             </div>
             <div className="lg:col-span-7">
               <ol className="space-y-16 lg:space-y-20 divide-y divide-ink/10">
-                {PROCESS_STEPS.map((s, i) => (
+                {site.content.process.steps.map((s, i) => (
                   <li key={s.no} className={i === 0 ? "" : "pt-16 lg:pt-20"}>
                     <Reveal>
                       <span className="block font-serif text-3xl lg:text-4xl text-ink/25 mb-6 font-medium italic">
@@ -516,39 +375,33 @@ function LandingPage() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-20 items-center">
             <Reveal className="lg:col-span-6 order-2 lg:order-1">
               <span className="block text-[11px] uppercase tracking-[0.3em] text-ink/50 mb-6">
-                03 · The Practitioner
+                {site.content.about.eyebrow}
               </span>
               <h2 className="font-serif text-5xl lg:text-6xl leading-[1] font-medium tracking-[-0.02em] mb-10 italic">
-                Fifi.
+                {site.about.heading}
               </h2>
               <div className="space-y-5 text-ink/65 leading-relaxed max-w-[50ch] mb-12">
-                <p>
-                  Based in the heart of Delhi, my practice is rooted in the belief that a tattoo is more than pigment — it is a transformation of the self. I specialise in the slow, intentional art of handpoke, with a careful machine practice for pieces that ask for it.
-                </p>
-                <p>
-                  My studio is a sanctuary designed for focus and calm, away from the bustle of commercial shops. Here, craftsmanship meets mindfulness — every session is a single conversation, never a queue.
-                </p>
+                {site.content.about.bio.map((paragraph) => (
+                  <p key={paragraph.slice(0, 24)}>{paragraph}</p>
+                ))}
               </div>
               <div className="flex gap-12 border-t border-ink/10 pt-10">
-                <div>
-                  <span className="block text-3xl font-serif font-medium">6<span className="text-ink/40">+</span></span>
-                  <span className="text-[10px] uppercase tracking-[0.25em] text-ink/40 mt-2 block">Years of Practice</span>
-                </div>
-                <div>
-                  <span className="block text-3xl font-serif font-medium">1.2k<span className="text-ink/40">+</span></span>
-                  <span className="text-[10px] uppercase tracking-[0.25em] text-ink/40 mt-2 block">Marks Made</span>
-                </div>
-                <div>
-                  <span className="block text-3xl font-serif font-medium italic">∞</span>
-                  <span className="text-[10px] uppercase tracking-[0.25em] text-ink/40 mt-2 block">Cups of Chai</span>
-                </div>
+                {site.content.about.stats.map((stat) => (
+                  <div key={stat.label}>
+                    <span className="block text-3xl font-serif font-medium">
+                      {stat.value}
+                      {stat.suffix && <span className="text-ink/40">{stat.suffix}</span>}
+                    </span>
+                    <span className="text-[10px] uppercase tracking-[0.25em] text-ink/40 mt-2 block">{stat.label}</span>
+                  </div>
+                ))}
               </div>
             </Reveal>
             <Reveal className="lg:col-span-6 order-1 lg:order-2" delay={0.1}>
               <figure className="w-full overflow-hidden rounded-[2px] ring-1 ring-ink/5 bg-canvas">
                 <img
-                  src={artistAbout}
-                  alt="Fifi, handpoke tattoo artist — full portrait"
+                  src={site.about.portrait}
+                  alt={site.about.portraitAlt}
                   loading="lazy"
                   className="w-full h-auto object-contain"
                 />
@@ -563,11 +416,11 @@ function LandingPage() {
         <div className="max-w-5xl mx-auto px-6 lg:px-24">
           <Reveal>
             <span className="block text-[11px] uppercase tracking-[0.3em] text-ink/50 mb-12 text-center">
-              Client Echoes
+              {site.content.testimonials.eyebrow}
             </span>
           </Reveal>
           <div className="grid gap-20 lg:gap-28">
-            {TESTIMONIALS.map((t, i) => (
+            {site.content.testimonials.items.map((t, i) => (
               <Reveal key={t.name} delay={i * 0.05}>
                 <figure className={i % 2 === 0 ? "max-w-[60ch]" : "max-w-[60ch] ml-auto text-right"}>
                   <blockquote className="font-serif text-2xl lg:text-3xl leading-[1.35] italic text-balance">
@@ -588,15 +441,15 @@ function LandingPage() {
         <div className="max-w-7xl mx-auto px-6 lg:px-24 grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16">
           <Reveal className="lg:col-span-4">
             <span className="block text-[11px] uppercase tracking-[0.3em] text-ink/50 mb-4">
-              04 · Notes
+              {site.content.faq.eyebrow}
             </span>
             <h2 className="font-serif text-4xl lg:text-5xl leading-[1.05] font-medium tracking-[-0.01em]">
-              Things people <span className="italic">often</span> ask.
+              Things people <span className="italic">{site.content.faq.titleItalic}</span> ask.
             </h2>
           </Reveal>
           <div className="lg:col-span-8">
             <Accordion type="single" collapsible className="w-full divide-y divide-ink/10 border-y border-ink/10">
-              {FAQS.map((f, i) => (
+              {site.content.faq.items.map((f, i) => (
                 <AccordionItem key={f.q} value={`faq-${i}`} className="border-b-0">
                   <AccordionTrigger className="py-6 text-left text-base lg:text-lg font-medium hover:no-underline tracking-[-0.01em]">
                     {f.q}
@@ -617,28 +470,28 @@ function LandingPage() {
           <Reveal className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 lg:mb-16">
             <div>
               <span className="block text-[11px] uppercase tracking-[0.3em] text-ink/50 mb-4">
-                From the Studio
+                {site.content.instagram.eyebrow}
               </span>
               <h2 className="font-serif text-3xl lg:text-4xl leading-tight font-medium tracking-[-0.01em]">
-                Latest on Instagram.
+                {site.content.instagram.title}
               </h2>
             </div>
             <a
-              href={INSTAGRAM_URL}
+              href={site.env.INSTAGRAM_URL}
               target="_blank"
               rel="noreferrer"
               className="group inline-flex items-center gap-3 text-sm font-medium text-ink/70 hover:text-ink transition-colors"
             >
-              <span>{INSTAGRAM_LABEL}</span>
+              <span>{site.env.INSTAGRAM_LABEL}</span>
               <span aria-hidden className="text-xs transition-transform group-hover:translate-x-1">→</span>
             </a>
           </Reveal>
           <Reveal>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-3 lg:gap-4">
-              {INSTAGRAM.map((src, i) => (
+              {site.instagram.grid.map((src, i) => (
                 <a
                   key={i}
-                  href={INSTAGRAM_URL}
+                  href={site.env.INSTAGRAM_URL}
                   target="_blank"
                   rel="noreferrer"
                   className="group block aspect-square overflow-hidden rounded-[2px] ring-1 ring-ink/5"
@@ -661,32 +514,25 @@ function LandingPage() {
         <div className="max-w-5xl mx-auto px-6 lg:px-24 text-center">
           <Reveal>
             <span className="block text-[11px] uppercase tracking-[0.3em] text-canvas/50 mb-8">
-              05 · Booking
+              {site.content.booking.eyebrow}
             </span>
             <h2 className="font-serif text-4xl lg:text-7xl leading-[1.02] font-medium tracking-[-0.02em] mb-10 text-balance">
-              Commence a new <span className="italic font-normal">narrative</span>.
+              Commence a new <span className="italic font-normal">{site.content.booking.titleItalic}</span>.
             </h2>
             <p className="text-canvas/60 max-w-[44ch] mx-auto text-pretty leading-relaxed mb-14">
-              Currently accepting inquiries for custom projects, flash, and small piercings in Delhi. Choose your preferred channel — I usually reply within a day.
+              {site.booking.description}
             </p>
           </Reveal>
           <Reveal delay={0.1}>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-3 w-full max-w-3xl mx-auto">
-              <ContactCard
-                href={WHATSAPP_URL}
-                eyebrow="WhatsApp"
-                label="Direct message"
-              />
-              <ContactCard
-                href={INSTAGRAM_URL}
-                eyebrow="Instagram"
-                label={INSTAGRAM_LABEL}
-              />
-              <ContactCard
-                href={STUDIO_EMAIL_URL}
-                eyebrow="Email"
-                label={STUDIO_EMAIL}
-              />
+              {site.booking.contacts.map((contact) => (
+                <ContactCard
+                  key={contact.type}
+                  href={contact.href}
+                  eyebrow={contact.eyebrow}
+                  label={contact.label}
+                />
+              ))}
             </div>
           </Reveal>
         </div>
@@ -696,28 +542,28 @@ function LandingPage() {
       <footer className="border-t border-ink/10 py-14 bg-canvas">
         <div className="max-w-7xl mx-auto px-6 lg:px-24 grid gap-10 md:grid-cols-3 items-start">
           <div className="space-y-3">
-            <span className="font-serif text-2xl italic font-medium tracking-tight">Fifi Poke</span>
+            <span className="font-serif text-2xl italic font-medium tracking-tight">{site.brand.name}</span>
             <p className="text-xs text-ink/50 leading-relaxed max-w-[28ch]">
-              A boutique handpoke and machine tattoo studio in Hauz Khas Village, New Delhi.
+              {site.footer.blurb}
             </p>
           </div>
           <div className="space-y-3 text-xs text-ink/60 leading-relaxed">
             <p className="text-[10px] uppercase tracking-[0.25em] text-ink/40">Studio</p>
-            <p>{STUDIO_STREET}<br/>{STUDIO_CITY}, {STUDIO_POSTAL_CODE}</p>
-            <p>Tue — Sat · 11:00 – 19:00<br/>By appointment only</p>
+            <p>{site.env.STUDIO_STREET}<br/>{site.env.STUDIO_CITY}, {site.env.STUDIO_POSTAL_CODE}</p>
+            <p>{site.footer.hours}<br/>{site.content.footer.appointmentNote}</p>
           </div>
           <div className="space-y-3 text-xs text-ink/60">
             <p className="text-[10px] uppercase tracking-[0.25em] text-ink/40">Elsewhere</p>
             <ul className="space-y-2">
-              <li><a className="hover:text-ink transition-colors" href={INSTAGRAM_URL} target="_blank" rel="noreferrer">Instagram</a></li>
-              <li><a className="hover:text-ink transition-colors" href={WHATSAPP_URL}>WhatsApp</a></li>
-              <li><a className="hover:text-ink transition-colors" href={STUDIO_EMAIL_URL}>Email the studio</a></li>
+              <li><a className="hover:text-ink transition-colors" href={site.env.INSTAGRAM_URL} target="_blank" rel="noreferrer">Instagram</a></li>
+              <li><a className="hover:text-ink transition-colors" href={site.env.WHATSAPP_URL}>WhatsApp</a></li>
+              <li><a className="hover:text-ink transition-colors" href={site.env.STUDIO_EMAIL_URL}>Email the studio</a></li>
             </ul>
           </div>
         </div>
         <div className="max-w-7xl mx-auto px-6 lg:px-24 mt-12 pt-6 border-t border-ink/5 flex flex-col md:flex-row justify-between items-start md:items-center gap-3 text-[10px] uppercase tracking-[0.25em] text-ink/40">
-          <p>© {new Date().getFullYear()} Fifi Poke Studio</p>
-          <p>Crafted in Delhi · By appointment</p>
+          <p>{site.footer.copyright}</p>
+          <p>{site.footer.crafted}</p>
         </div>
       </footer>
 
