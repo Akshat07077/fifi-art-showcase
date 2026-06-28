@@ -5,6 +5,6 @@ export type { ContentPresetId } from "./presets";
 export { artistContent as fifiContent } from "./artist.content";
 export type { ArtistContent, GalleryCategory, WorkCategory, GalleryItemConfig } from "./artist.content";
 export { GALLERY_CATEGORIES } from "./artist.content";
-export { dummyContent } from "./presets/dummy.content";
+export { inknovaContent, inknovaContent as dummyContent } from "./presets/inknova.content";
 export { assetRegistry, getAsset, getAssets } from "./assets.registry";
 export type { AssetKey } from "./assets.registry";

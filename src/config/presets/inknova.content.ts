@@ -1,11 +1,8 @@
 import type { ArtistContent } from "../artist.content";
 import type { AssetKey } from "../assets.registry";
 
-/**
- * Dummy artist preset — for demos / testing rebrand without touching Fifi's content.
- * Pair with `.env.dummy` (copy to `.env`) and set VITE_CONTENT_PRESET=dummy
- */
-export const dummyContent = {
+/** Ink Nova (Luna) — Mumbai fine-line studio */
+export const inknovaContent = {
   seo: {
     titleSuffix: "Fine-Line Tattoo Studio, Mumbai",
   },
@@ -27,12 +24,12 @@ export const dummyContent = {
 
   hero: {
     images: {
-      portrait: "heroPortrait" as AssetKey,
-      accents: ["gallery3", "gallery4"] as AssetKey[],
-      strip: ["gallery3", "gallery4", "heroNeedle"] as AssetKey[],
+      portrait: "novaHero" as AssetKey,
+      accents: ["novaAccentA", "novaAccentB"] as AssetKey[],
+      strip: ["novaAccentA", "novaAccentB", "gallery5"] as AssetKey[],
     },
-    portraitAlt: "Tattoo artist in studio",
-    accentAlts: ["Geometric tattoo detail", "Fine-line tattoo detail"],
+    portraitAlt: "Luna, fine-line tattoo artist in Mumbai studio",
+    accentAlts: ["Geometric fine-line tattoo", "Blackwork snake tattoo"],
     headlineBefore: "Lines that listen",
     headlineItalic: "before they linger",
     primaryCta: "Book a Session",
@@ -44,8 +41,8 @@ export const dummyContent = {
     title: "Marks made with intention.",
     items: [
       {
-        id: "d1",
-        image: "gallery3",
+        id: "n1",
+        image: "novaAccentA",
         alt: "Minimal geometric tattoo on forearm",
         title: "Vector",
         category: "Machine",
@@ -53,8 +50,8 @@ export const dummyContent = {
         ratio: "aspect-[5/8]",
       },
       {
-        id: "d2",
-        image: "gallery4",
+        id: "n2",
+        image: "novaAccentB",
         alt: "Fine-line snake tattoo on ankle",
         title: "Serpent",
         category: "Handpoke",
@@ -62,7 +59,7 @@ export const dummyContent = {
         ratio: "aspect-[4/5]",
       },
       {
-        id: "d3",
+        id: "n3",
         image: "gallery5",
         alt: "Flash sheet with small tattoo designs",
         title: "Flash Set A",
@@ -71,12 +68,30 @@ export const dummyContent = {
         ratio: "aspect-[4/3]",
       },
       {
-        id: "d4",
+        id: "n4",
         image: "gallery6",
         alt: "Ear piercing with gold jewelry",
         title: "Constellation",
         category: "Piercings",
         meta: "14k gold",
+        ratio: "aspect-[4/5]",
+      },
+      {
+        id: "n5",
+        image: "ig1",
+        alt: "Fine-line wrist tattoo detail",
+        title: "Orbit",
+        category: "Handpoke",
+        meta: "Wrist · 45m",
+        ratio: "aspect-square",
+      },
+      {
+        id: "n6",
+        image: "ig2",
+        alt: "Minimal linework tattoo on shoulder",
+        title: "Axis",
+        category: "Machine",
+        meta: "Shoulder · 1.5h",
         ratio: "aspect-[4/5]",
       },
     ],
@@ -112,10 +127,10 @@ export const dummyContent = {
 
   about: {
     eyebrow: "03 · The Artist",
-    images: { portrait: "artistAbout" as AssetKey },
-    portraitAlt: "Full portrait",
+    images: { portrait: "novaAbout" as AssetKey },
+    portraitAlt: "full portrait",
     bio: [
-      "I'm a fine-line and blackwork artist working out of a small studio in Bandra. My work leans graphic and minimal — clean lines, open skin, nothing fussy.",
+      "I'm Luna — a fine-line and blackwork artist working out of a small studio in Bandra. My work leans graphic and minimal: clean lines, open skin, nothing fussy.",
       "Sessions are one-on-one by design. No walk-in rush, no loud shop floor — just the work, the music low, and time to get it right.",
     ],
     stats: [
@@ -129,7 +144,8 @@ export const dummyContent = {
     eyebrow: "Kind Words",
     items: [
       {
-        quote: "Super calm energy and insanely clean lines. Exactly what I wanted without having to over-explain.",
+        quote:
+          "Super calm energy and insanely clean lines. Exactly what I wanted without having to over-explain.",
         name: "Rhea M.",
         place: "Mumbai",
       },
@@ -137,6 +153,11 @@ export const dummyContent = {
         quote: "Booked for a flash piece and left with something that feels custom. Healing was smooth.",
         name: "Arjun P.",
         place: "Pune",
+      },
+      {
+        quote: "Luna's studio is quiet, precise, and professional. Would recommend to anyone nervous about their first tattoo.",
+        name: "Sana K.",
+        place: "Bandra",
       },
     ],
   },
@@ -158,13 +179,17 @@ export const dummyContent = {
         q: "What should I expect on the day?",
         a: "Arrive fed and hydrated. We'll do a final stencil check, then settle in. Sessions vary from 45 minutes to multi-hour sits.",
       },
+      {
+        q: "Where is the studio?",
+        a: "Bandra West, Mumbai — exact address shared after booking confirmation.",
+      },
     ],
   },
 
   instagram: {
     eyebrow: "Studio Feed",
     title: "On Instagram.",
-    grid: ["gallery3", "gallery4", "gallery5", "gallery6", "ig3", "ig4", "heroPortrait", "heroNeedle"] as AssetKey[],
+    grid: ["novaAccentA", "novaAccentB", "gallery5", "gallery6", "ig1", "ig2", "ig3", "ig4"] as AssetKey[],
   },
 
   booking: {
@@ -172,7 +197,7 @@ export const dummyContent = {
     title: "Start something new.",
     titleItalic: "new",
     description:
-      "Taking custom and flash bookings for Mumbai. Message me with your idea — I usually reply within 24 hours.",
+      "Taking custom and flash bookings in Mumbai. Message me with your idea — I usually reply within 24 hours.",
     contacts: [
       { type: "whatsapp" as const, eyebrow: "WhatsApp", label: "Direct message" },
       { type: "instagram" as const, eyebrow: "Instagram", label: "" },
@@ -181,12 +206,12 @@ export const dummyContent = {
   },
 
   footer: {
-    blurb: "A fine-line tattoo studio.",
+    blurb: "A fine-line and blackwork tattoo studio.",
     appointmentNote: "By appointment only",
     craftedNote: "By appointment",
   },
 
   images: {
-    og: "gallery3" as AssetKey,
+    og: "novaAccentA" as AssetKey,
   },
 } satisfies ArtistContent;
